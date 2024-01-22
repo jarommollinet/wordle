@@ -6,6 +6,7 @@ def pick_random_word():
     return random.choice(FIVE_LETTER_WORDS)
 
 def display_word_in_first_row(gw, word):
+    word = word.upper()
     for col in range(N_COLS):
         gw.set_square_letter(0, col, word[col])
 
