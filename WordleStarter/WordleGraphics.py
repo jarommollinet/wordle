@@ -100,7 +100,7 @@ class WordleGWindow:
                 ch = tke.upper()
             else:
                 ch = tke.char.upper()
-            if ch == "\007" or ch == "\177" or ch == "DELETE":
+            if ch in ["\007", "\177", "\b", "DELETE", "BACKSPACE"]:  # Adjusted to handle Backspace
                 self.show_message("")
                 if self._row < N_ROWS and self._col > 0:
                     self._col -= 1
@@ -204,6 +204,7 @@ class WordleGWindow:
 
     def show_message(self, msg, color="Black"):
         self._message.set_text(msg, color)
+        
 
 
 class WordleSquare:
