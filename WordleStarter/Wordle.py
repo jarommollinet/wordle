@@ -1,15 +1,16 @@
 import random
+import config
 from WordleDictionary import FIVE_LETTER_WORDS
-from WordleGraphics import WordleGWindow, N_COLS, N_ROWS, CORRECT_COLOR, PRESENT_COLOR, MISSING_COLOR
+from WordleGraphics import WordleGWindow, N_COLS, N_ROWS
 
 def pick_random_word():
     return random.choice(FIVE_LETTER_WORDS)
 
 def update_key_colors(gw, letter, color):
     current_color = gw.get_key_color(letter)
-    if current_color == CORRECT_COLOR:
+    if current_color == config.CORRECT_COLOR:
         return  # Don't downgrade color
-    if current_color == PRESENT_COLOR and color == MISSING_COLOR:
+    if current_color == config.PRESENT_COLOR and color == config.MISSING_COLOR:
         return  # Don't downgrade color
     gw.set_key_color(letter, color)
 
@@ -18,20 +19,20 @@ def color_boxes_and_keys(gw, guess, word, row):
     # First pass for correct letters
     for col, letter in enumerate(guess):
         if word[col] == letter:
-            gw.set_square_color(row, col, CORRECT_COLOR)
-            update_key_colors(gw, letter.upper(), CORRECT_COLOR)
+            gw.set_square_color(row, col, config.CORRECT_COLOR)
+            update_key_colors(gw, letter.upper(), config.CORRECT_COLOR)
             used_letters[col] = True
 
     # Second pass for present and missing letters
     for col, letter in enumerate(guess):
-        if gw.get_square_color(row, col) != CORRECT_COLOR:
+        if gw.get_square_color(row, col) != config.CORRECT_COLOR:
             if letter in word and not used_letters[word.index(letter)]:
-                gw.set_square_color(row, col, PRESENT_COLOR)
-                update_key_colors(gw, letter.upper(), PRESENT_COLOR)
+                gw.set_square_color(row, col, config.PRESENT_COLOR)
+                update_key_colors(gw, letter.upper(), config.PRESENT_COLOR)
                 used_letters[word.index(letter)] = True
             else:
-                gw.set_square_color(row, col, MISSING_COLOR)
-                update_key_colors(gw, letter.upper(), MISSING_COLOR)
+                gw.set_square_color(row, col, config.MISSING_COLOR)
+                update_key_colors(gw, letter.upper(), config.MISSING_COLOR)
 
 def enter_action(gw, s):
     s = s.lower()  # Convert the entered word to lowercase
@@ -48,12 +49,18 @@ def enter_action(gw, s):
 
 def wordle():
     global random_word
+
+    config.colorblind_mode = input("Enable colorblind mode? (yes/no): ").lower().startswith('y')
+
+    if config.colorblind_mode:
+        config.CORRECT_COLOR = config.CORRECT_COLOR_CB
+        config.PRESENT_COLOR = config.PRESENT_COLOR_CB
+
     gw = WordleGWindow()
     gw.add_enter_listener(lambda s: enter_action(gw, s))  # Connect the enter_action to the keyboard input
 
     # Pick a random word and display it in the first row
     random_word = pick_random_word()
-    display_word_in_first_row(gw, random_word)
 
 if __name__ == "__main__":
     wordle()

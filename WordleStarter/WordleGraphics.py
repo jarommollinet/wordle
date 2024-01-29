@@ -9,17 +9,19 @@ import atexit
 import math
 import time
 import tkinter
+import config
+from config import CORRECT_COLOR, PRESENT_COLOR, MISSING_COLOR, UNKNOWN_COLOR, KEY_COLOR
 
 # Constants
 
 N_ROWS = 6			# Number of rows
 N_COLS = 5			# Number of columns
 
-CORRECT_COLOR = "#66BB66"       # Light green for correct letters
-PRESENT_COLOR = "#CCBB66"       # Brownish yellow for misplaced letters
-MISSING_COLOR = "#999999"       # Gray for letters that don't appear
-UNKNOWN_COLOR = "#FFFFFF"       # Undetermined letters are white
-KEY_COLOR = "#DDDDDD"           # Keys are colored light gray
+# CORRECT_COLOR = "#66BB66"       # Light green for correct letters
+# PRESENT_COLOR = "#CCBB66"       # Brownish yellow for misplaced letters
+# MISSING_COLOR = "#999999"       # Gray for letters that don't appear
+# UNKNOWN_COLOR = "#FFFFFF"       # Undetermined letters are white
+# KEY_COLOR = "#DDDDDD"           # Keys are colored light gray
 
 CANVAS_WIDTH = 500		# Width of the tkinter canvas (pixels)
 CANVAS_HEIGHT = 700		# Height of the tkinter canvas (pixels)
@@ -237,7 +239,7 @@ class WordleSquare:
         color = color.upper()
         self._color = color
         fg = "White"
-        if color == UNKNOWN_COLOR:
+        if color == config.UNKNOWN_COLOR:
             fg = "Black"
         self._canvas.itemconfig(self._frame, fill=color)
         self._canvas.itemconfig(self._text, fill=fg)
@@ -276,9 +278,9 @@ class WordleKey:
                    x, y + KEY_CORNER,
                    x, y]
         self._frame = canvas.create_polygon(points,
-                                            fill=KEY_COLOR,
-                                            outline=KEY_COLOR,
-                                            smooth=True)
+                                        fill=config.KEY_COLOR,  # Use config.KEY_COLOR
+                                        outline=config.KEY_COLOR,  # Use config.KEY_COLOR
+                                        smooth=True)
         self._text = canvas.create_text(x + width / 2,
                                         y + height / 2,
                                         text=label,
